@@ -17,7 +17,7 @@ type Stringify struct {
 }
 
 // Token is my key
-const Token string = "NDEyNDk3NjE1MzgxMzMxOTY5.DWLJGA.gbWEk7b4a6F-7Ik2BPdCfda4bS4"
+const Token string = ""
 
 // BotID is BotID
 var BotID string
