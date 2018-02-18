@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -15,9 +16,6 @@ type Stringify struct {
 	Joke   string `json:"joke"`
 	Status int    `json:"status"`
 }
-
-// Token is my key
-const Token string = ""
 
 // BotID is BotID
 var BotID string
@@ -55,23 +53,23 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if strings.Contains(m.Content, "bitcoin") {
+	if strings.Contains(strings.ToLower(m.Content), "bitcoin") {
 		_, _ = s.ChannelMessageSend("412498257655365633", "BITCOIN IS A BUBBLE")
 	}
 
-	if strings.Contains(m.Content, "dad joke") {
+	if strings.Contains(strings.ToLower(m.Content), "dad joke") {
 		_, _ = s.ChannelMessageSend("412498257655365633", handleDadJokes())
 	}
 
-	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend("412507247697068032", "https://giphy.com/gifs/3djolNOedd5pS")
+	if strings.ToLower(m.Content) == "david" {
+		_, _ = s.ChannelMessageSend("412498257655365633", "https://giphy.com/gifs/3djolNOedd5pS")
 	}
 
 }
 
 func main() {
 
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
 	if err != nil {
 		log.Panic(err)
