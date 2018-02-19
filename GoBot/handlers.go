@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/st3v/translator/microsoft"
 )
 
 func HandleTranslate(t string) string {

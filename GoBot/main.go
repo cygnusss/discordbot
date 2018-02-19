@@ -53,6 +53,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 func main() {
 
+	go StartServer()
+
 	dg, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
 	if err != nil {
