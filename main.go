@@ -68,7 +68,6 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if len(m.Content) <= 11 {
 			_, _ = s.ChannelMessageSend(c, "Message is too short, try again!")
 		} else {
-			// ch := make(chan string)
 			msg := HandleTranslate(m.Content[11:])
 
 			_, _ = s.ChannelMessageSend(c, msg)
