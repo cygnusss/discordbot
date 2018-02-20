@@ -1,0 +1,47 @@
+ll virtual users finished
+Summary report @ 00:59:28(-0800) 2018-02-19
+  Scenarios launched:  100
+  Scenarios completed: 100
+  Requests completed:  1000
+  RPS sent: 199.2
+  Request latency:
+    min: 87
+    max: 865.1
+    median: 307.3
+    p95: 605.3
+    p99: 728.2
+  Scenario duration:
+    min: 1504.5
+    max: 3677.3
+    median: 3115
+    p95: 3497.2
+    p99: 3630.8
+  Scenario counts:
+    0: 100 (100%)
+  Codes:
+    200: 1000
+
+At rate of 200 RPS server started to break with go routine (not pool)
+
+
+Report @ 01:06:59(-0800) 2018-02-19
+  Scenarios launched:  0
+  Scenarios completed: 0
+  Requests completed:  2399
+  Concurrent users:    97
+  RPS sent: 239.18
+  Request latency:
+    min: 250.1
+    max: 677.2
+    median: 401.8
+    p95: 464.8
+    p99: 485
+  Scenario duration:
+    min: NaN
+    max: NaN
+    median: NaN
+    p95: NaN
+    p99: NaN
+  Codes:
+    200: 2399
+

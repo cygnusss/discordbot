@@ -5,28 +5,47 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/st3v/translator/microsoft"
 )
 
-func HandleTranslate(t string) string {
+func HandleTranslate(msg string) string {
 	translator := microsoft.NewTranslator(os.Getenv("MSFT"))
 
-	translation, err := translator.Translate(t, "en", "ru")
-	translation, err = translator.Translate(translation, "ru", "yue")
-	translation, err = translator.Translate(translation, "yue", "vi")
-	translation, err = translator.Translate(translation, "vi", "es")
-	translation, err = translator.Translate(translation, "es", "en")
+	output := make(chan string)
+	gochan := make(chan string)
 
-	if err != nil {
-		log.Panicf("Error during translation: %s", err.Error())
-	}
+	go func(t string, gochan chan string) {
+		translation, err := translator.Translate(t, "en", "ru")
+		translation, err = translator.Translate(translation, "ru", "yue")
+		translation, err = translator.Translate(translation, "yue", "es")
+		translation, err = translator.Translate(translation, "es", "vi")
 
-	return translation
+		if err != nil {
+			log.Panicf("Error during translation: %s", err.Error())
+		}
+
+		gochan <- translation
+	}(msg, gochan)
+
+	go func(gochan chan string) {
+		msg := <-gochan
+		translation, err := translator.Translate(msg, "vi", "en")
+
+		if err != nil {
+			log.Panicf("error at translating: %v", err)
+		}
+
+		output <- translation
+	}(gochan)
+
+	return <-output
 }
 
-func HandleDadJokes(ch chan string) <-chan string {
+func HandleDadJokes() string {
 
 	c := &http.Client{}
-	var b DadJokesResponse
+	var body DadJokesResponse
 
 	req, err := http.NewRequest("GET", "https://icanhazdadjoke.com/", nil)
 
@@ -37,12 +56,10 @@ func HandleDadJokes(ch chan string) <-chan string {
 	req.Header.Add("Accept", "application/json")
 	resp, err := c.Do(req)
 
-	if err := json.NewDecoder(resp.Body).Decode(&b); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
 		log.Panic(err)
 	}
 
 	defer resp.Body.Close()
-	ch <- b.Joke
-	return ch
-
+	return body.Joke
 }

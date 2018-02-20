@@ -31,14 +31,16 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if len(m.Content) <= 11 {
 			_, _ = s.ChannelMessageSend(c, "Message is too short, try again!")
 		} else {
-			_, _ = s.ChannelMessageSend(c, HandleTranslate(m.Content[11:]))
+			// ch := make(chan string)
+			msg := HandleTranslate(m.Content[11:])
+
+			_, _ = s.ChannelMessageSend(c, msg)
 		}
 	}
 
 	if dadjBool {
-		ch := make(chan string)
-		go HandleDadJokes(ch)
-		_, _ = s.ChannelMessageSend(c, <-ch)
+		joke := HandleDadJokes()
+		_, _ = s.ChannelMessageSend(c, joke)
 	}
 
 	if strings.Contains(strings.ToLower(m.Content), "bitcoin") {
@@ -52,6 +54,8 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func main() {
+
+	go StartServer()
 
 	dg, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
 
