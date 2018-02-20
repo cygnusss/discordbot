@@ -2,16 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
+
+	newrelic "github.com/newrelic/go-agent"
 )
 
 type dResp struct {
 	Joke string `json:"joke"`
 }
 
-func donkeyHandler(w http.ResponseWriter, r *http.Request) {
-	resp := dResp{"hello world"}
+func dadJoke(w http.ResponseWriter, r *http.Request) {
+	var resp dResp
+
+	resp.Joke = HandleDadJokes()
 
 	respJSON, err := json.Marshal(resp)
 
@@ -26,7 +31,14 @@ func donkeyHandler(w http.ResponseWriter, r *http.Request) {
 
 func StartServer() {
 
-	http.HandleFunc("/donkey", donkeyHandler)
+	config := newrelic.NewConfig("DiscordBot", os.Getenv("NEWRELIC"))
+	App, err := newrelic.NewApplication(config)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	http.HandleFunc(newrelic.WrapHandleFunc(App, "/dadjoke", dadJoke))
 
 	port := os.Getenv("PORT")
 
