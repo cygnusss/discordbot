@@ -6,13 +6,50 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/subosito/gotenv"
 )
 
 // BotID is BotID
 var BotID string
 
-func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
+func init() {
+	gotenv.Load()
+}
 
+func main() {
+	go StartServer()
+
+	dg, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
+
+	if err != nil {
+		log.Panic(err)
+		return
+	}
+
+	u, err := dg.User("@me")
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	BotID = u.ID
+
+	dg.AddHandler(messageHandler)
+
+	err = dg.Open()
+
+	if err != nil {
+		log.Panic(err)
+		return
+	}
+
+	log.Println("Bot is running!")
+
+	<-make(chan struct{})
+	return
+}
+
+func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == BotID {
 		return
 	}
@@ -50,40 +87,4 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.ToLower(m.Content) == "david" {
 		_, _ = s.ChannelMessageSend(c, "https://giphy.com/gifs/3djolNOedd5pS")
 	}
-
-}
-
-func main() {
-
-	go StartServer()
-
-	dg, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
-
-	if err != nil {
-		log.Panic(err)
-		return
-	}
-
-	u, err := dg.User("@me")
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	BotID = u.ID
-
-	dg.AddHandler(messageHandler)
-
-	err = dg.Open()
-
-	if err != nil {
-		log.Panic(err)
-		return
-	}
-
-	log.Println("Bot is running!")
-
-	<-make(chan struct{})
-	return
-
 }

@@ -30,7 +30,6 @@ func dadJoke(w http.ResponseWriter, r *http.Request) {
 }
 
 func StartServer() {
-
 	config := newrelic.NewConfig("DiscordBot", os.Getenv("NEWRELIC"))
 	App, err := newrelic.NewApplication(config)
 
@@ -47,5 +46,4 @@ func StartServer() {
 	}
 
 	http.ListenAndServe(port, nil)
-
 }

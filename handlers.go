@@ -43,7 +43,6 @@ func HandleTranslate(msg string) string {
 }
 
 func HandleDadJokes() string {
-
 	c := &http.Client{}
 	var body DadJokesResponse
 
