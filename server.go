@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -9,31 +9,24 @@ import (
 	newrelic "github.com/newrelic/go-agent"
 )
 
-func dadJoke(w http.ResponseWriter, r *http.Request) {
-	var resp DResp
-
-	resp.Joke = HandleDadJokes()
-
-	respJSON, err := json.Marshal(resp)
-
-	if err != nil {
-		panic(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(respJSON)
-}
-
 func StartServer() {
 	config := newrelic.NewConfig("DiscordBot", os.Getenv("NEWRELIC"))
-	App, err := newrelic.NewApplication(config)
+	app, err := newrelic.NewApplication(config)
 
 	if err != nil {
 		log.Panic(err)
 	}
 
-	http.HandleFunc(newrelic.WrapHandleFunc(App, "/dadjoke", dadJoke))
+	http.HandleFunc(newrelic.WrapHandleFunc(app, "/dadjoke", func(w http.ResponseWriter, r *http.Request) {
+		j := Job{w, r, make(chan bool)}
+		JobQueue <- j
+		for {
+			select {
+			case <-j.Done:
+				return
+			}
+		}
+	}))
 
 	port := os.Getenv("PORT")
 
@@ -41,5 +34,6 @@ func StartServer() {
 		port = ":8081"
 	}
 
+	fmt.Println("server is running")
 	http.ListenAndServe(port, nil)
 }
