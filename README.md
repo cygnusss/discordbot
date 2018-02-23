@@ -1,4 +1,6 @@
 # discordbot
+Interactive bot for Discord chat-application
+
 # instructions
 do:
 ```sh
