@@ -9,12 +9,8 @@ import (
 	newrelic "github.com/newrelic/go-agent"
 )
 
-type dResp struct {
-	Joke string `json:"joke"`
-}
-
 func dadJoke(w http.ResponseWriter, r *http.Request) {
-	var resp dResp
+	var resp DResp
 
 	resp.Joke = HandleDadJokes()
 
