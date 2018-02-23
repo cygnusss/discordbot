@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -58,6 +59,8 @@ func HandleDadJokes() string {
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
 		log.Panic(err)
 	}
+
+	fmt.Println("Dad joke is:", body.Joke)
 
 	defer resp.Body.Close()
 	return body.Joke
