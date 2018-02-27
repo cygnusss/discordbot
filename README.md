@@ -1,5 +1,5 @@
 # discordbot
-Interactive bot for Discord chat-application
+Interactive bot for Discord chat-application ![alt go](https://stuff.mit.edu/afs/athena/software/ggo/current/go/doc/gopher/pencil/gopherswrench.jpg)
 
 # instructions
 do:
