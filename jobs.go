@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -29,8 +28,6 @@ func NewWorker(wp chan chan Job) Worker {
 }
 
 func (w *Worker) Start() {
-	log.Println("worker started")
-
 	go func() {
 		for {
 			w.WorkerPool <- w.JobChannel
@@ -47,8 +44,6 @@ func (w *Worker) Start() {
 
 func (j *Job) Run() {
 	var resp DResp
-
-	log.Println("Worker is running")
 
 	resp.Joke = HandleDadJokes()
 

@@ -14,7 +14,7 @@ var BotID string
 
 const (
 	maxJob    = 10000
-	maxWorker = 100
+	maxWorker = 1000
 )
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
