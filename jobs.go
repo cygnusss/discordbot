@@ -5,19 +5,8 @@ import (
 	"net/http"
 )
 
-type Job struct {
-	w    http.ResponseWriter
-	r    *http.Request
-	Done chan bool
-}
-
+// JobQueue is a channel of Jobs, Job struct can be found in the structs file
 var JobQueue chan Job
-
-type Worker struct {
-	WorkerPool chan chan Job
-	JobChannel chan Job
-	quit       chan bool
-}
 
 func NewWorker(wp chan chan Job) Worker {
 	return Worker{

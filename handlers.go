@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
-
-	"github.com/st3v/translator/microsoft"
 )
 
+// HandleTranslate paused
+
+/*
 func HandleTranslate(msg string) string {
 	translator := microsoft.NewTranslator(os.Getenv("MSFT"))
 
@@ -42,6 +41,7 @@ func HandleTranslate(msg string) string {
 
 	return <-output
 }
+*/
 
 func HandleDadJokes() string {
 	c := &http.Client{}
@@ -59,8 +59,6 @@ func HandleDadJokes() string {
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
 		log.Panic(err)
 	}
-
-	fmt.Println("Dad joke is:", body.Joke)
 
 	defer resp.Body.Close()
 	return body.Joke

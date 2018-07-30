@@ -9,7 +9,6 @@ import (
 	"github.com/subosito/gotenv"
 )
 
-// BotID is BotID
 var BotID string
 
 const (
@@ -22,24 +21,13 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	transBool := strings.HasPrefix(m.Content, "/translate")
 	dadjBool := strings.HasPrefix(m.Content, "/dadjoke")
 	helpBool := strings.HasPrefix(m.Content, "/donkey")
 
 	c := m.ChannelID
 
 	if helpBool {
-		_, _ = s.ChannelMessageSend(c, "'/translate' - translates whatever is after the tag into donkey language\n'/dadjoke' - get a random dad joke\n¯\\_(ツ)_/¯")
-	}
-
-	if transBool {
-		if len(m.Content) <= 11 {
-			_, _ = s.ChannelMessageSend(c, "Message is too short, try again!")
-		} else {
-			msg := HandleTranslate(m.Content[11:])
-
-			_, _ = s.ChannelMessageSend(c, msg)
-		}
+		_, _ = s.ChannelMessageSend(c, "'/dadjoke' - get a random dad joke\n¯\\_(ツ)_/¯")
 	}
 
 	if dadjBool {
@@ -47,18 +35,12 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		_, _ = s.ChannelMessageSend(c, joke)
 	}
 
-	if strings.Contains(strings.ToLower(m.Content), "bitcoin") {
-		_, _ = s.ChannelMessageSend(c, "BITCOIN IS A BUBBLE")
-	}
-
 	if strings.ToLower(m.Content) == "david" {
 		_, _ = s.ChannelMessageSend(c, "https://giphy.com/gifs/3djolNOedd5pS")
 	}
 }
 
-func init() {
-	gotenv.Load()
-}
+func init() { gotenv.Load() }
 
 func main() {
 	stop := make(chan bool)
