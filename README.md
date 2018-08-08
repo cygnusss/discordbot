@@ -2,9 +2,9 @@
 Interactive bot for Discord chat-application ![alt go](https://stuff.mit.edu/afs/athena/software/ggo/current/go/doc/gopher/pencil/gopherswrench.jpg)
 
 # instructions
-do:
+Set env variable for your discord bot token:
 ```sh
-  export MSFT="your_token" && export TOKEN="your_token" && export NEWRELIC="your_token"
+  export TOKEN="your_token"
 ```
 then:
 ```sh
