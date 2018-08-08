@@ -2,64 +2,33 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
+	"time"
 )
 
-// HandleTranslate paused
-
-/*
-func HandleTranslate(msg string) string {
-	translator := microsoft.NewTranslator(os.Getenv("MSFT"))
-
-	output := make(chan string)
-	gochan := make(chan string)
-
-	go func(t string, gochan chan string) {
-		translation, err := translator.Translate(t, "en", "ru")
-		translation, err = translator.Translate(translation, "ru", "yue")
-		translation, err = translator.Translate(translation, "yue", "es")
-		translation, err = translator.Translate(translation, "es", "vi")
-
-		if err != nil {
-			log.Panicf("Error during translation: %s", err.Error())
-		}
-
-		gochan <- translation
-	}(msg, gochan)
-
-	go func(gochan chan string) {
-		msg := <-gochan
-		translation, err := translator.Translate(msg, "vi", "en")
-
-		if err != nil {
-			log.Panicf("error at translating: %v", err)
-		}
-
-		output <- translation
-	}(gochan)
-
-	return <-output
-}
-*/
-
-func HandleDadJokes() string {
+// HandleDadJokes handles all !dadjoke event in messageHandler (main.go)
+func HandleDadJokes(start time.Time) (string, error) {
 	c := &http.Client{}
 	var body DadJokesResponse
 
+	// Create new GET request to dad jokes API
 	req, err := http.NewRequest("GET", "https://icanhazdadjoke.com/", nil)
-
 	if err != nil {
-		log.Panicf("Error during getting a dad joke: %s", err.Error())
+		fmt.Println("Error during getting a dad joke:\n", err.Error())
+		return "", err
 	}
-
 	req.Header.Add("Accept", "application/json")
-	resp, err := c.Do(req)
 
+	// Send the request and parse the response body
+	resp, err := c.Do(req)
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		log.Panic(err)
+		fmt.Println("Error while decoding request body:\n", err)
+		return "", err
 	}
 
 	defer resp.Body.Close()
-	return body.Joke
+	defer fmt.Println("Hadnled !dadjoke in:", time.Now().Sub(start))
+
+	return body.Joke, nil
 }
